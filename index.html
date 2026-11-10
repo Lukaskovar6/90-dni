@@ -825,7 +825,7 @@ function finish(kind){
   if(RESULTS_URL) setTimeout(()=>fillStats(id), 1200);
 }
 
-intro();
+if(location.hash==="#vysledky"){ reset(); classScreen(); } else intro();
 </script>
 </body>
 </html>
