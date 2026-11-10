@@ -118,6 +118,20 @@
 
   #mute{position:fixed;right:12px;bottom:12px;z-index:40;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.08)}
   footer{text-align:center;font-size:.75rem;color:var(--muted);margin-top:24px}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+  .kpi b{display:block;font-family:"Space Grotesk";font-size:1.5rem}
+  .kpi span{font-size:.72rem;color:var(--muted);line-height:1.2;display:block}
+  .sbox h3{font-size:1rem;margin-bottom:8px}
+  .donutbox{display:flex;align-items:center;gap:14px}
+  .donut{width:110px;height:110px;flex:0 0 110px;transform:rotate(0deg)}
+  .legend{font-size:.84rem}
+  .legend div{margin:3px 0}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+  .hbar{display:grid;grid-template-columns:1fr 90px 26px;align-items:center;gap:8px;font-size:.84rem;margin:5px 0}
+  .hbar .bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+  .hbar .bar i{display:block;height:100%;background:var(--ink);transition:width .9s cubic-bezier(.3,.7,.3,1)}
+  .hbar.me span{font-weight:700} .hbar.me .bar i{background:var(--accent)}
 </style>
 </head>
 <body>
@@ -476,20 +490,71 @@ async function getStats(){
   if(!RESULTS_URL) return null;
   try{ const r = await fetch(`${RESULTS_URL}?action=stats`); return await r.json(); }catch(e){ return null; }
 }
+const GROUP = {
+  stay:["happy","golden","duty","favorite","quiet","change"],
+  left:["runEarly","runMid","leave","offer","tomas","together"],
+  out:["sacrifice","empty","fired"]
+};
+function donut(parts){
+  // parts: [{n, col, label}]
+  const tot = parts.reduce((a,p)=>a+p.n,0) || 1, R = 15.915;
+  let off = 25, arcs = "";
+  parts.forEach(p=>{ const pct = p.n/tot*100; if(pct>0){ arcs += `<circle cx="21" cy="21" r="${R}" fill="none" stroke="${p.col}" stroke-width="6" stroke-dasharray="${pct} ${100-pct}" stroke-dashoffset="${off}"/>`; off -= pct; } });
+  return `<div class="donutbox"><svg viewBox="0 0 42 42" class="donut"><circle cx="21" cy="21" r="${R}" fill="none" stroke="#e3ddd1" stroke-width="6"/>${arcs}</svg>
+    <div class="legend">${parts.map(p=>`<div><i style="background:${p.col}"></i>${p.label} <b>${Math.round(p.n/tot*100)} %</b> <span class="muted">(${p.n})</span></div>`).join("")}</div></div>`;
+}
 function statsHTML(st, mine){
   if(!RESULTS_URL) return `<p class="small muted" style="margin:0">Výsledky třídy zatím nejsou zapojené.</p>`;
   if(!st) return `<p class="small muted" style="margin:0">Výsledky se nepodařilo načíst. Zkus to za chvíli.</p>`;
-  const tot = st.total || 0;
+  const C = st.counts || {}, tot = Object.entries(C).filter(([k])=>ENDINGS[k]).reduce((a,[,n])=>a+n,0);
   if(!tot) return `<p class="small muted" style="margin:0">Zatím nikdo nedohrál. Buď první!</p>`;
-  const rows = Object.entries(st.counts||{}).filter(([k])=>ENDINGS[k]).sort((a,b)=>b[1]-a[1]);
-  return `<p class="small muted" style="margin:0">Dohrálo ${tot} ${tot===1?"hráč":tot<5?"hráči":"hráčů"} (počítá se první hra každého)</p>` +
-    rows.map(([k,n])=>`<div class="meter ${k===mine?'me':''}"><span>${ENDINGS[k].ic} ${ENDINGS[k].t}</span><div class="bar"><i data-w="${Math.round(n/tot*100)}" style="width:0"></i></div><b>${n}</b></div>`).join("");
+  const sum = ids => ids.reduce((a,k)=>a+(C[k]||0),0);
+  const rows = Object.entries(C).filter(([k])=>ENDINGS[k]).sort((a,b)=>b[1]-a[1]);
+  const max = rows[0][1], topId = rows[0][0];
+  const pct = n => Math.round(n/tot*100);
+  return `
+    <div class="kpis">
+      <div class="kpi"><b>${tot}</b><span>dohraných her</span></div>
+      <div class="kpi"><b>${pct(sum(GROUP.stay))} %</b><span>zůstalo ve firmě</span></div>
+      <div class="kpi"><b>${pct(C.golden||0)} %</b><span>ve zlatých poutech</span></div>
+    </div>
+
+    <div class="sbox"><h3>Jak zkušebka dopadla</h3>
+    ${donut([
+      {n:sum(GROUP.stay), col:"#2f9e6a", label:"Zůstali"},
+      {n:sum(GROUP.left), col:"#3a6fd8", label:"Odešli sami"},
+      {n:sum(GROUP.out), col:"#e2552b", label:"Vyčerpání / vyhozeni"}
+    ])}</div>
+
+    <div class="sbox"><h3>Co drželo ty, kdo zůstali</h3>
+    ${sum(GROUP.stay) ? donut([
+      {n:(C.happy||0)+(C.change||0), col:"#2f9e6a", label:"Chtěli (afektivní)"},
+      {n:(C.golden||0)+(C.quiet||0), col:"#c69a1e", label:"Benefity (kalkulativní)"},
+      {n:(C.duty||0)+(C.favorite||0), col:"#5b3fb5", label:"Povinnost / šéf (normativní)"}
+    ]) : `<p class="small muted" style="margin:0">Zatím nikdo nezůstal.</p>`}</div>
+
+    <div class="sbox"><h3>Všechny konce</h3>
+    ${rows.map(([k,n])=>`<div class="hbar ${k===mine?'me':''}"><span>${ENDINGS[k].ic} ${ENDINGS[k].t}</span><div class="bar"><i data-w="${Math.round(n/max*100)}" style="width:0"></i></div><b>${n}</b></div>`).join("")}
+    </div>
+
+    <div class="q"><b>Nejčastější konec třídy: ${ENDINGS[topId].ic} ${ENDINGS[topId].t}.</b><br>${ENDINGS[topId].q}</div>`;
 }
 async function fillStats(mine){
   const box = document.getElementById("stats"); if(!box) return;
   const st = await getStats();
+  if(!document.getElementById("stats")) return;
   box.innerHTML = statsHTML(st, mine);
   requestAnimationFrame(()=>requestAnimationFrame(()=>box.querySelectorAll("[data-w]").forEach(el=>el.style.width=el.dataset.w+"%")));
+}
+let statsTimer = null;
+function classScreen(){
+  render(`<div class="card stack"><h2>📊 Výsledky třídy</h2>
+    <p class="small muted" style="margin:0">Hry za posledních 12 hodin · obnovuje se samo každých 15 s</p>
+    <div id="stats" class="stack"><p class="muted small">Načítám…</p></div>
+    <button class="btn primary" onclick="clearInterval(statsTimer);intro()">Zpět</button></div>`);
+  fillStats(null);
+  clearInterval(statsTimer);
+  statsTimer = setInterval(()=>{ if(document.getElementById("stats")) fillStats(null); else clearInterval(statsTimer); }, 15000);
 }
 
 /* ================= OBRAZOVKY ================= */
@@ -521,11 +586,6 @@ function intro(){
   </div>`);
 }
 
-function classScreen(){
-  render(`<div class="card stack"><h2>📊 Výsledky třídy</h2><div id="stats" class="stack"><p class="muted small">Načítám…</p></div>
-    <button class="btn primary" onclick="intro()">Zpět</button></div>`);
-  fillStats(null);
-}
 
 function pickFirm(){
   render(`
