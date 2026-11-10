@@ -10,414 +10,603 @@
 <style>
   :root{
     --bg:#f4f1ea; --card:#fffdf8; --ink:#1d1b18; --muted:#6b655c; --line:#e3ddd1;
-    --accent:#e2552b; --accent-soft:#fbe3d9;
-    --energy:#2f9e6a; --trust:#3a6fd8; --links:#b5641c; --gold:#c69a1e;
-    --radius:16px;
+    --accent:#e2552b; --accent-soft:#fbe3d9; --violet:#5b3fb5; --violet-soft:#ece6fb;
+    --energy:#2f9e6a; --trust:#3a6fd8; --links:#b5641c; --radius:16px;
   }
   *{box-sizing:border-box}
   html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:1.5}
   h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;line-height:1.15;margin:0}
   .wrap{max-width:560px;margin:0 auto;padding:16px 16px 40px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:0 1px 0 rgba(0,0,0,.03)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
   .stack>*+*{margin-top:14px}
-  .muted{color:var(--muted)}
-  .small{font-size:.86rem}
+  .muted{color:var(--muted)} .small{font-size:.86rem}
   .tag{display:inline-block;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:999px}
   button{font:inherit;cursor:pointer}
-  .btn{display:block;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;color:var(--ink);transition:border-color .15s,transform .05s}
-  .btn:hover{border-color:var(--ink)}
-  .btn:active{transform:scale(.99)}
+  .btn{display:block;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;color:var(--ink);transition:border-color .15s,transform .08s}
+  .btn:hover:not(:disabled){border-color:var(--ink)}
+  .btn:active:not(:disabled){transform:scale(.98)}
   .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink);text-align:center;font-weight:600}
-  .btn.primary:hover{background:#000}
   .btn.ghost{background:transparent;text-align:center;color:var(--muted);font-size:.9rem;border-style:dashed}
   .btn.ghost:hover{color:var(--accent);border-color:var(--accent)}
+  .btn-echo{border-color:#b9a6ef;background:#f7f4ff}
+  .btn.locked{opacity:.55;cursor:not-allowed;border-style:dashed;padding:10px 14px;font-size:.9rem;background:transparent}
+  .btn .lock{display:block;font-size:.76rem;color:var(--violet);font-weight:600;margin-top:2px}
+  .btn.tired .lock{color:var(--accent)}
   .choices .btn+.btn{margin-top:10px}
 
-  /* hero */
   .hero{padding:28px 22px}
-  .hero h1{font-size:2.6rem;letter-spacing:-.02em}
+  .hero h1{font-size:2.8rem;letter-spacing:-.02em}
   .hero h1 span{color:var(--accent)}
-  .rules{padding-left:18px;margin:0}
-  .rules li{margin:4px 0}
 
-  /* ads */
-  .ad{border:1.5px solid var(--line);border-radius:14px;padding:16px;background:var(--card);text-align:left;width:100%}
+  .ad{border:1.5px solid var(--line);border-radius:14px;padding:16px;background:var(--card);text-align:left;width:100%;display:block}
   .ad:hover{border-color:var(--ink)}
   .ad+.ad{margin-top:12px}
-  .ad .firm{font-family:"Space Grotesk";font-weight:700;font-size:1.2rem}
+  .ad .firm{font-family:"Space Grotesk";font-weight:700;font-size:1.25rem}
   .ad ul{margin:8px 0 6px;padding-left:18px}
   .ad .ben{font-size:.85rem;color:var(--muted)}
 
-  /* hud */
   .hud{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0 12px;margin-bottom:6px}
-  .hudtop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+  .hudtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
   .week{font-family:"Space Grotesk";font-weight:700;font-size:1.1rem}
   .progress{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin-bottom:10px}
-  .progress i{display:block;height:100%;background:var(--accent);transition:width .4s}
+  .progress i{display:block;height:100%;background:var(--accent);transition:width .5s}
   .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
   .stat{font-size:.74rem;font-weight:600;color:var(--muted)}
   .stat .bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:4px}
-  .stat .bar i{display:block;height:100%;border-radius:6px;transition:width .5s}
-  .bens{margin-top:8px;font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:6px}
-  .bens b{color:var(--gold)}
+  .stat .bar i{display:block;height:100%;border-radius:6px;transition:width .8s cubic-bezier(.3,.7,.3,1)}
+  .drain{margin-top:8px;font-size:.78rem;color:var(--muted)}
+  .drain b{color:var(--accent)}
 
   .promise{border-left:3px solid var(--accent);padding:6px 12px;background:var(--accent-soft);border-radius:0 10px 10px 0;font-size:.9rem}
   .promise b{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+  .echo{font-size:.85rem;font-weight:600;color:var(--violet);background:var(--violet-soft);border-radius:10px;padding:8px 12px}
+  .teaser{font-size:.85rem;font-weight:600;color:var(--violet)}
+  .warn{font-size:.85rem;font-weight:600;color:#b13a24;background:#fbe0dc;border-radius:10px;padding:8px 12px}
   .scene h2{font-size:1.5rem}
+  .who{display:flex;gap:12px;align-items:flex-start}
+  .who svg{flex:0 0 52px;width:52px;height:52px}
+  .who .nm{font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .bubble{background:#fff;border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:10px 12px;margin-top:2px}
 
   .deltas{display:flex;flex-wrap:wrap;gap:6px}
-  .d{font-size:.8rem;font-weight:600;padding:3px 9px;border-radius:999px;background:#eee}
+  .d{font-size:.8rem;font-weight:600;padding:3px 9px;border-radius:999px;background:#eee;animation:pop .4s ease both}
+  .d:nth-child(2){animation-delay:.08s}.d:nth-child(3){animation-delay:.16s}.d:nth-child(4){animation-delay:.24s}.d:nth-child(5){animation-delay:.32s}
   .d.up{background:#dff3e9;color:#1d7a4f}
   .d.down{background:#fbe0dc;color:#b13a24}
-  .concept{border:1.5px solid var(--ink);border-radius:14px;padding:14px 16px;background:#fff}
-  .concept .name{font-family:"Space Grotesk";font-weight:700;font-size:1.05rem}
-  .concept .src{font-size:.78rem;color:var(--muted)}
-
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{font-size:.78rem;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px}
-  .big{font-family:"Space Grotesk";font-weight:700;font-size:1.9rem;letter-spacing:-.01em}
-  .meter{display:grid;grid-template-columns:110px 1fr 36px;align-items:center;gap:8px;font-size:.85rem}
-  .meter .bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden}
-  .meter .bar i{display:block;height:100%;background:var(--ink)}
-  .meter.win .bar i{background:var(--accent)}
-  .q{background:var(--ink);color:#fff;border-radius:14px;padding:16px}
-  .q b{color:#ffb79f}
-  .fade{animation:fade .35s ease}
-  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-  footer{text-align:center;font-size:.75rem;color:var(--muted);margin-top:24px}
-  .echo{font-size:.85rem;font-weight:600;color:#5b3fb5;background:#ece6fb;border-radius:10px;padding:8px 12px}
-  .teaser{font-size:.85rem;font-weight:600;color:#5b3fb5}
-  .btn-echo{border-color:#b9a6ef;background:#f7f4ff}
-  .btn:disabled{opacity:.45;cursor:not-allowed}
-  .btn .lock{display:block;font-size:.75rem;color:var(--accent);font-weight:600;margin-top:2px}
-  details.concept summary{cursor:pointer;list-style:none}
+  .dw{font-weight:400;opacity:.8}
+  @keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+  .event{border:1.5px dashed var(--ink);border-radius:14px;padding:12px 14px;background:#fffbe9;animation:pop .4s .3s ease both}
+  .event b{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em}
+  details.concept{border:1.5px solid var(--ink);border-radius:14px;padding:12px 16px;background:#fff}
+  details.concept summary{cursor:pointer;list-style:none;font-family:"Space Grotesk";font-weight:700}
   details.concept summary::-webkit-details-marker{display:none}
   details.concept summary::after{content:" ▾";color:var(--muted)}
-  .warn{font-size:.85rem;font-weight:600;color:#b13a24;background:#fbe0dc;border-radius:10px;padding:8px 12px}
-  .dw{font-weight:400;opacity:.8}
+  .src{font-size:.78rem;color:var(--muted)}
+
+  .big{font-family:"Space Grotesk";font-weight:700;font-size:1.9rem;letter-spacing:-.01em}
+  .meter{display:grid;grid-template-columns:110px 1fr 40px;align-items:center;gap:8px;font-size:.85rem}
+  .meter .bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+  .meter .bar i{display:block;height:100%;background:var(--ink)}
+  .meter.me .bar i{background:var(--accent)} .meter.me span{font-weight:700}
   .plist{margin:0;padding-left:18px}
   .plist2,.why{margin:0;padding:0;list-style:none}
   .plist2 li,.why li{padding:6px 0;border-bottom:1px solid var(--line);font-size:.92rem}
   .plist2 li:last-child,.why li:last-child{border-bottom:0}
   .why li::before{content:"→ ";color:var(--accent);font-weight:700}
+  .q{background:var(--ink);color:#fff;border-radius:14px;padding:16px}
+  .q b{color:#ffb79f}
+
+  .gallery{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .tile{aspect-ratio:1;border-radius:10px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:1.4rem;position:relative}
+  .tile.no{background:#ebe6dc;color:#b3ab9e;font-size:1rem;font-weight:700}
+  .tile.me{outline:2.5px solid var(--accent)}
+  .tile:hover .tt{display:block}
+  .tt{display:none;position:absolute;bottom:105%;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:.72rem;padding:4px 8px;border-radius:6px;white-space:nowrap;z-index:3}
+
+  .fade{animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .shake{animation:shake .5s ease}
+  @keyframes shake{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+  #flash{position:fixed;inset:0;pointer-events:none;z-index:50;opacity:0}
+  #flash.bad{animation:flash .6s ease;background:radial-gradient(circle,rgba(226,85,43,0) 40%,rgba(226,85,43,.45))}
+  #flash.good{animation:flash .6s ease;background:radial-gradient(circle,rgba(47,158,106,0) 40%,rgba(47,158,106,.4))}
+  @keyframes flash{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+  .confetti{position:fixed;top:-12px;width:9px;height:14px;z-index:60;pointer-events:none;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+  .bigicon{font-size:3.2rem;line-height:1;display:inline-block;animation:bounce .8s ease}
+  @keyframes bounce{0%{transform:scale(.2)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+
+  #mute{position:fixed;right:12px;bottom:12px;z-index:40;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  footer{text-align:center;font-size:.75rem;color:var(--muted);margin-top:24px}
 </style>
 </head>
 <body>
+<div id="flash"></div>
+<button id="mute" onclick="toggleMute()" aria-label="Zvuk">🔊</button>
 <div class="wrap" id="app"></div>
 
 <script>
-/* ================= FIRMA ================= */
-const FIRM = {
-  name:"Lumen Digital", role:"Junior analytik/čka",
-  promises:{
-    onboard:"Propracovaný onboarding a buddy",
-    flex:"Home office, kdy potřebuješ",
-    balance:"Žádné přesčasy, work-life balance",
-    family:"Rodinná atmosféra",
-    growth:"Pravidelná zpětná vazba a růst"
-  },
-  benefits:"13. plat, 5 týdnů dovolené, MultiSport"
-};
+/* =========================================================
+   NASTAVENÍ – sem vlož adresu Google Apps Script (viz README)
+   ========================================================= */
+const RESULTS_URL = "";
+
+/* ================= FIRMY ================= */
+const FIRMS = [
+ { id:"lumen", name:"Lumen Digital", kind:"tech startup", role:"Junior analytik/čka",
+   boss:"Marek", bossT:"šéf týmu", chan:"Zpráva na Slacku", gear:"notebook",
+   task:"prezentaci pro klienta", hoRule:"„Nováčci jsou první půlrok v kanceláři. Ať tě vidím.“",
+   promises:{ onboard:"Propracovaný onboarding a buddy", flex:"Home office, kdy potřebuješ",
+     balance:"Žádné přesčasy", family:"Jsme jedna rodina", growth:"Pravidelná zpětná vazba a růst" },
+   benefits:"13. plat, MultiSport, 5 týdnů dovolené" },
+ { id:"grandia", name:"Grandia Bank", kind:"velká banka", role:"Junior analytik/čka rizik",
+   boss:"Ing. Hájek", bossT:"vedoucí oddělení", chan:"E-mail", gear:"přístupy do systémů",
+   task:"report pro centrálu", hoRule:"„Home office je až po roce. Tak to chce centrála.“",
+   promises:{ onboard:"Adaptační program a osobní mentor", flex:"Flexibilní doba a home office",
+     balance:"Respektujeme váš osobní čas", family:"Přátelský a otevřený kolektiv", growth:"Kariérní plán a pravidelné hodnocení" },
+   benefits:"14. plat, penzijko, 5 týdnů dovolené" }
+];
+
+/* ================= POSTAVY (SVG) ================= */
+function avatar(id){
+  const P = {
+    boss:{bg:"#dfe6f5",skin:"#f0c39d",hair:"#8a8a8a",shirt:"#2d3e66",extra:'<rect x="23" y="27" width="7" height="5" rx="2" fill="none" stroke="#222" stroke-width="1.4"/><rect x="34" y="27" width="7" height="5" rx="2" fill="none" stroke="#222" stroke-width="1.4"/><line x1="30" y1="29" x2="34" y2="29" stroke="#222" stroke-width="1.4"/>', hairPath:'M20 26 Q20 14 32 14 Q44 14 44 26 L42 22 Q32 18 22 22 Z'},
+    tomas:{bg:"#dff3e9",skin:"#e9b48c",hair:"#4a3020",shirt:"#2f9e6a",extra:'<path d="M22 32 Q32 46 42 32 L42 36 Q32 48 22 36 Z" fill="#4a3020"/>', hairPath:'M20 27 Q19 13 32 13 Q45 13 44 27 Q40 18 32 18 Q24 18 20 27 Z'},
+    eliska:{bg:"#f6e1f0",skin:"#f3cba8",hair:"#7a4a2a",shirt:"#c0478a",extra:'', hairPath:'M18 44 Q16 14 32 13 Q48 14 46 44 L42 44 Q44 22 32 19 Q20 22 22 44 Z'},
+    petra:{bg:"#fff1c9",skin:"#f3cba8",hair:"#d9a93c",shirt:"#c69a1e",extra:'<circle cx="20" cy="33" r="1.8" fill="#c69a1e"/><circle cx="44" cy="33" r="1.8" fill="#c69a1e"/>', hairPath:'M20 27 Q20 15 32 15 Q44 15 44 27 Q40 19 32 19 Q24 19 20 27 Z M27 10 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0'},
+    jana:{bg:"#e4ecf7",skin:"#e9b48c",hair:"#222",shirt:"#3a6fd8",extra:'', hairPath:'M19 34 Q17 14 32 13 Q47 14 45 34 Q43 20 32 19 Q21 20 19 34 Z'},
+    kamarad:{bg:"#eef0e4",skin:"#f0c39d",hair:"#b5641c",shirt:"#6b655c",extra:'', hairPath:'M20 25 Q22 12 32 13 Q44 13 44 25 Q38 17 30 19 Q24 20 20 25 Z'},
+    hr:{bg:"#fff1c9",skin:"#f3cba8",hair:"#d9a93c",shirt:"#c69a1e",extra:'', hairPath:'M20 27 Q20 15 32 15 Q44 15 44 27 Q40 19 32 19 Q24 19 20 27 Z'}
+  }[id] || null;
+  if(!P) return "";
+  return `<svg viewBox="0 0 64 64" aria-hidden="true">
+    <circle cx="32" cy="32" r="32" fill="${P.bg}"/>
+    <path d="M12 64 Q14 46 32 46 Q50 46 52 64 Z" fill="${P.shirt}"/>
+    <rect x="28" y="38" width="8" height="9" fill="${P.skin}"/>
+    <circle cx="32" cy="29" r="12" fill="${P.skin}"/>
+    <path d="${P.hairPath}" fill="${P.hair}"/>
+    <circle cx="27" cy="29" r="1.4" fill="#222"/><circle cx="37" cy="29" r="1.4" fill="#222"/>
+    <path d="M28 35 Q32 38 36 35" stroke="#7a3b2a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    ${P.extra}</svg>`;
+}
+const WHO = () => ({ boss:`${F().boss} · ${F().bossT}`, tomas:"Tomáš · kolega", eliska:"Eliška · taky nováčka", petra:"Petra · HR", jana:"Jana · kolegyně", kamarad:"Ondra · kamarád" });
 
 /* ================= TÝDNY =================
-   choice: t, fx{e,d,v,b}, c{aff,calc,norm}, set[], p{promise:'kept'|'broken'},
-           log:[tag,text], need (min. energie), needD (min. důvěra), res      */
+ choice: t, fx{e,d,v,b}, c{aff,calc,norm}, set[], p{promise}, log[tag,text], res,
+         need (min. energie), needD (min. důvěra), echo, lock:"nápověda", end         */
+const L = (t,hint) => ({ t, lock:hint });
+
 const WEEKS = [
  // 1
- S => ({ p:"onboard", title:"První den",
-   text:"Buddy je na dovolené. Notebook nemáš. Nikdo neví, kde budeš sedět.",
+ S => ({ p:"onboard", title:"První den", who:null,
+   text:`Tvůj buddy je na dovolené. ${cap(F().gear)} nemáš. Nikdo neví, kde budeš sedět.`,
    choices:[
-    {t:"Počkám, až si mě někdo všimne", fx:{d:-10}, p:{onboard:"broken"}, set:["passive"], log:["trust","1. týden: první den jsi čekal(a), až si tě někdo všimne."], res:"Do oběda si tě nikdo nevšimne."},
-    {t:"Zeptám se kolegy vedle", fx:{v:15}, p:{onboard:"broken"}, set:["tomas"], log:["links","1. týden: oslovil(a) jsi Tomáše a získal(a) spojence."], res:"Kolega Tomáš ti půjčí notebook. Máš spojence."},
-    {t:"Napíšu na HR", fx:{d:-5,b:-1}, p:{onboard:"broken"}, set:["hr"], log:["voice","1. týden: ozval(a) ses na HR."], res:"HR: „Buddy program teď nefunguje.“ Šéf to ví."}
+    {t:"Počkám, až si mě někdo všimne", fx:{d:-10}, p:{onboard:"broken"}, set:["passive"], log:["trust","1. týden: čekal(a) jsi, až si tě někdo všimne."], res:"Do oběda si tě nikdo nevšimne."},
+    {t:"Zeptám se kolegy vedle", fx:{v:15}, p:{onboard:"broken"}, set:["tomas"], log:["links","1. týden: oslovil(a) jsi Tomáše a získal(a) spojence."], res:"Kolega Tomáš ti se vším pomůže. Máš spojence.", who:"tomas"},
+    {t:"Napíšu na HR", fx:{d:-5,b:-1}, p:{onboard:"broken"}, set:["hr"], log:["voice","1. týden: ozval(a) ses na HR."], res:"Petra z HR: „Buddy program teď moc nefunguje. Promiň.“", who:"petra"},
+    {t:"Dám se do řeči s druhou nováčkou", fx:{v:10}, p:{onboard:"broken"}, set:["eliska"], log:["links","1. týden: spřátelil(a) ses s Eliškou, taky nováčkou."], res:"Eliška to má stejně. Nejsi v tom sám/sama.", who:"eliska"}
    ],
    concept:["Buddy jen na papíře","Buddy zrychluje adaptaci. Bez času na nováčka nefunguje.","Bauer et al., 2007"] }),
 
  // 2
- S => {
-   const ch = [
+ S => ({ p:"onboard", title:"Tři lidé, tři úkoly", who:"boss",
+   text:"„Tohle je priorita.“ Totéž ti řeknou další dva lidé o úplně jiných úkolech.",
+   echo: S.f.tomas ? "Tomáš z 1. týdne ti může poradit." : null,
+   choices:[
     {t:"Udělám všechno, i večer", fx:{e:-15,b:1}, c:{norm:1}, set:["workhorse"], need:15, log:["work","2. týden: zvládl(a) jsi všechny úkoly – po večerech."], res:"Stihneš to. Do půlnoci."},
-    {t:"Zeptám se šéfa na priority", fx:{d:-5,b:1}, log:["boss","2. týden: zeptal(a) ses šéfa na priority."], res:"Šéf: „To se časem naučíš.“ Ale líbí se mu, že se ptáš."},
-    {t:"Vyberu si sám(a)", fx:{v:-10,b:-1}, log:["boss","2. týden: rozhodl(a) ses sám/sama, kolegové se urazili."], res:"Dva kolegové i šéf jsou naštvaní."}
-   ];
-   if(S.f.tomas) ch.push({t:"Zeptám se Tomáše", fx:{v:5}, set:["rules"], echo:1, log:["links","2. týden: Tomáš ti vysvětlil nepsaná pravidla."], res:"Tomáš ti prozradí nepsaná pravidla."});
-   return { p:"onboard", title:"Tři lidé, tři úkoly",
-     text:"Každý tvrdí, že ten jeho je nejdůležitější. Popis pozice nesedí ani na jeden.",
-     echo: S.f.tomas ? "Tomáš z 1. týdne ti může poradit." : null, choices:ch,
-     concept:["Srozumitelnost role","Nejasná role je jeden z nejsilnějších stresorů.","Bauer et al., 2007"] };
- },
+    {t:"Zeptám se šéfa na priority", fx:{d:-5,b:1}, log:["boss","2. týden: zeptal(a) ses šéfa na priority."], res:`${F().boss}: „To se časem naučíš.“ Ale líbí se mu, že se ptáš.`, who:"boss"},
+    {t:"Vyberu si sám(a)", fx:{v:-10,b:-1}, log:["boss","2. týden: rozhodl(a) ses sám/sama, kolegové se urazili."], res:"Dva kolegové i šéf jsou naštvaní."},
+    S.f.tomas
+      ? {t:"Zeptám se Tomáše", fx:{v:5}, set:["rules"], echo:1, log:["links","2. týden: Tomáš ti vysvětlil nepsaná pravidla."], res:"Tomáš ti prozradí nepsaná pravidla firmy.", who:"tomas"}
+      : L("Zeptám se zkušeného kolegy","Odemkneš, když si v 1. týdnu najdeš spojence mezi kolegy.")
+   ],
+   concept:["Srozumitelnost role","Nejasná role je jeden z nejsilnějších stresorů.","Bauer et al., 2007"] }),
 
  // 3
- S => {
-   const wh = S.f.workhorse;
-   const ch = [
-    {t:"Odpovím hned", fx:{e:-10,b:1}, c:{norm:1}, set:["alwayson"], p:{balance:"broken"}, log:["work","3. týden: začal(a) jsi odpovídat na maily i večer."], res:"Šéf je spokojený. Večery už nejsou tvoje."},
-    {t:"Odpovím ráno", fx:{e:5,d:-5,b: wh?-2:-1}, set:["boundary"], log:["boss","3. týden: nastavil(a) sis hranici – maily až ráno."], res: wh ? "Šéf: „Minulý týden jsi byl(a) rychlejší.“" : "Pochvalu dostane někdo jiný."}
-   ];
-   ch.push(S.f.rules
-     ? {t:"Tomáš mě varoval – odpovím krátce a dost", fx:{v:5}, echo:1, log:["links","3. týden: díky Tomášovi jsi věděl(a), co se čeká."], res:"Krátká odpověď stačí. Šéf je ok, ty taky."}
-     : {t:"Zeptám se kolegů, jestli se to čeká", fx:{d:-10,v:10}, set:["truth"], log:["trust","3. týden: kolegové ti řekli, jak to tu reálně chodí."], res:"„Oficiálně ne. Reálně jo.“"});
-   return { p:"balance", title:"E-mail ve 21:47",
-     text: wh ? "Šéf píše večer – rovnou tobě. Ví, že večer pracuješ." : "Šéf píše večer. Kdo odpoví hned, dostane pochvalu.",
-     echo: wh ? "Ve 2. týdnu jsi pracoval(a) večer. Šéf si to pamatuje." : (S.f.rules ? "Tomáš ti o tomhle říkal." : null),
-     choices: ch,
-     concept:["Hodnoty vs. realita","Kulturu neukazuje inzerát, ale to, co šéf odměňuje.","Schein & Schein, 2016"] };
- },
+ S => { const wh = S.f.workhorse; return { p:"balance", title:`${F().chan} ve 21:47`, who:"boss",
+   text: wh ? "Šéf píše večer – rovnou tobě. Ví, že večer pracuješ." : "Šéf píše večer. Kdo odpoví hned, dostane ráno pochvalu.",
+   echo: wh ? "Ve 2. týdnu jsi pracoval(a) večer. Šéf si to pamatuje." : (S.f.rules ? "Tomáš ti o tomhle říkal." : null),
+   choices:[
+    {t:"Odpovím hned", fx:{e:-10,b:1}, c:{norm:1}, set:["alwayson"], p:{balance:"broken"}, log:["work","3. týden: začal(a) jsi odpovídat i večer."], res:"Šéf je spokojený. Večery už nejsou tvoje."},
+    {t:"Odpovím ráno", fx:{e:5,d:-5,b: wh?-2:-1}, set:["boundary"], log:["boss","3. týden: nastavil(a) sis hranici – zprávy až ráno."], res: wh ? "Šéf: „Minulý týden jsi byl(a) rychlejší.“" : "Pochvalu dostane někdo jiný."},
+    S.f.rules
+      ? {t:"Odpovím krátce, jak radil Tomáš", fx:{v:5}, echo:1, log:["links","3. týden: díky Tomášovi jsi věděl(a), co se čeká."], res:"Krátká odpověď stačí. Šéf je ok, ty taky."}
+      : {t:"Zeptám se kolegů, jestli se to čeká", fx:{d:-10,v:10}, set:["truth"], log:["trust","3. týden: kolegové ti řekli, jak to tu reálně chodí."], res:"„Oficiálně ne. Reálně jo.“"}
+   ],
+   concept:["Hodnoty vs. realita","Kulturu neukazuje inzerát, ale to, co šéf odměňuje.","Schein & Schein, 2016"] }; },
 
  // 4
- S => {
-   const fav = S.b >= 2;
-   const ch = [
+ S => { const fav = S.b >= 2, okBoss = S.b >= 0; return { p:"flex", title:"Home office? Ne.", who:"boss",
+   text: F().hoRule,
+   echo: fav ? "Šéf tě má rád – zkus to využít." : null,
+   choices:[
     {t:"Dobře, beru", fx:{d:-10}, p:{flex:"broken"}, log:["trust","4. týden: smířil(a) ses se zákazem home office."], res:"Kývneš. Tohle ale na pohovoru nezaznělo."},
-    {t:"Ukážu mu inzerát", fx:{d:-5,b:-2}, p:{flex:"broken"}, set:["rebel"], log:["boss","4. týden: ukázal(a) jsi šéfovi inzerát. Nelíbilo se mu to."], res:"„Tak jsme to nemysleli.“ Šéf je uražený."}
-   ];
-   ch.push(fav
-     ? {t:"Požádám o výjimku", fx:{e:10}, p:{flex:"kept"}, set:["favorite"], echo:1, log:["boss","4. týden: šéf ti dal výjimku – máš u něj dobré jméno."], res:"„Pro tebe jo, jeden den v týdnu.“ Konečně si odpočineš."}
-     : {t:"Asi to nemyslí zle", fx:{d:-3}, p:{flex:"broken"}, res:"Zklamání je menší."});
-   return { p:"flex", title:"Home office? Ne.",
-     text:"Šéf: „Nováčci jsou první půlrok v kanceláři. Ať tě vidím.“",
-     echo: fav ? "Šéf tě má rád – zkus to využít." : null, choices:ch,
-     concept:["Nenaplnění vs. porušení","Slib neplatí = nenaplnění. Pocit podvodu = porušení.","Morrison & Robinson, 1997"] };
- },
+    {t:"Ukážu mu inzerát", fx:{d:-5,b:-2}, p:{flex:"broken"}, set:["rebel"], log:["boss","4. týden: ukázal(a) jsi šéfovi inzerát. Nelíbilo se mu to."], res:"„Tak jsme to nemysleli.“ Šéf je uražený.", who:"boss"},
+    fav
+      ? {t:"Požádám o výjimku", fx:{e:10}, p:{flex:"kept"}, set:["favorite"], echo:1, log:["boss","4. týden: šéf ti dal výjimku – máš u něj dobré jméno."], res:"„Pro tebe jo, jeden den v týdnu.“", who:"boss"}
+      : L("Požádám o výjimku","Odemkneš, když budeš mít u šéfa dobré jméno (🙂 a víc)."),
+    S.f.eliska
+      ? (okBoss
+        ? {t:"Půjdu za šéfem spolu s Eliškou", fx:{e:5,d:5,v:5}, p:{flex:"kept"}, set:["duo"], echo:1, log:["voice","4. týden: s Eliškou jste si společně vyjednali home office."], res:"„Dva lidi, stejná prosba… Zkusíme jeden den.“", who:"eliska"}
+        : {t:"Půjdu za šéfem spolu s Eliškou", fx:{d:-5,b:-1,v:5}, p:{flex:"broken"}, set:["duo"], echo:1, log:["voice","4. týden: s Eliškou jste za šéfem šli spolu, ale neuspěli."], res:"„Vy dva se nějak spikli.“ Aspoň v tom nejsi sám/sama.", who:"eliska"})
+      : L("Půjdu za šéfem s dalším nováčkem","Odemkneš, když se v 1. týdnu seznámíš s druhou nováčkou."),
+    {t:"Asi to nemyslí zle", fx:{d:-3}, p:{flex:"broken"}, res:"Zklamání je menší."}
+   ],
+   concept:["Nenaplnění vs. porušení","Slib neplatí = nenaplnění. Pocit podvodu = porušení.","Morrison & Robinson, 1997"] }; },
 
  // 5
  S => {
-   if(S.v < 20) return { p:"family", title:"Oběd bez tebe",
+   if(S.v < 20) return { p:"family", title:"Oběd bez tebe", who:null,
      text:"Tým jde na oběd. Tebe nikdo nepozval.",
      echo:"Máš málo vazeb – nikdo si na tebe nevzpomněl.",
      choices:[
-      {t:"Přidám se sám(a)", fx:{v:10}, log:["links","5. týden: na oběd jsi se pozval(a) sám/sama."], res:"Trochu trapné. Ale funguje to."},
+      {t:"Přidám se sám(a)", fx:{v:10}, log:["links","5. týden: na oběd ses pozval(a) sám/sama."], res:"Trochu trapné. Ale funguje to."},
       {t:"Zůstanu u stolu", fx:{e:-5,v:-5,d:-5}, p:{family:"broken"}, set:["lonely"], log:["links","5. týden: zůstal(a) jsi na obědě sám/sama."], res:"Na fotkách z oběda nejsi."}
      ],
      concept:["Vazby","Vztahy s kolegy drží lidi ve firmě.","Mitchell et al., 2001"] };
-   return { p:"family", title:"Týmový oběd",
+   return { p:"family", title:"Týmový oběd", who:null,
      text:"Tým jde v pátek na oběd. Ty máš práci do večera.",
      choices:[
       {t:"Jdu s nimi", fx:{e:10,v:15}, c:{aff:1}, p:{family:"kept"}, log:["links","5. týden: šel/šla jsi s týmem na oběd."], res:"Poprvé se smějete. Nejsi „ten nový“."},
-      {t:"Dodělám práci", fx:{e:-5,v:-10,b:1}, p:{family:"broken"}, log:["work","5. týden: místo oběda s týmem jsi pracoval(a)."], res:"Šéf má práci včas. Tým tě nevidí."},
+      {t:"Dodělám práci", fx:{e:-5,v:-10,b:1}, p:{family:"broken"}, log:["work","5. týden: místo oběda jsi pracoval(a)."], res:"Šéf má práci včas. Tým tě nevidí."},
       {t:"Jdu a zeptám se, jak se tu mají", fx:{v:10,d:-10}, set:["truth"], log:["trust","5. týden: kolegové ti řekli pravdu o firmě."], res:"„Ty sliby z inzerátu? Ty psal marketing.“"}
      ],
      concept:["Vazby","Vztahy s kolegy drží lidi ve firmě.","Mitchell et al., 2001"] };
  },
 
  // 6
- S => {
-   const reb = S.f.rebel;
-   const ch = [
+ S => { const reb = S.f.rebel; return { p:"growth", title:"Zpětná vazba? Později.", who:"boss",
+   text:"„Hodnoticí schůzku zrušíme. Je to dobrý.“",
+   echo: reb ? "Ve 4. týdnu jsi šéfovi ukázal(a) inzerát. Pamatuje si to." : null,
+   choices:[
     reb
-     ? {t:"Trvám na schůzce", fx:{d:-5,b:-1}, p:{growth:"broken"}, echo:1, log:["boss","6. týden: šéf tě odbyl – pamatuje si inzerát."], res:"„Ty pořád něco chceš.“"}
+     ? {t:"Trvám na schůzce", fx:{d:-5,b:-1}, p:{growth:"broken"}, echo:1, log:["boss","6. týden: šéf tě odbyl – pamatuje si inzerát."], res:"„Ty pořád něco chceš.“", who:"boss"}
      : {t:"Trvám na schůzce", fx:{e:5,d:5,b:1}, p:{growth:"kept"}, log:["trust","6. týden: vyžádal(a) sis zpětnou vazbu a dostal(a) ji."], res:"15 minut. Konečně víš, co zlepšit."},
-    {t:"Nechám to být", fx:{e:-5,d:-10}, p:{growth:"broken"}, set:["insecure"], log:["trust","6. týden: zpětnou vazbu jsi nedostal(a) a nejistota rostla."], res:"Nevíš, jestli tě po zkušebce nevyhodí."}
-   ];
-   ch.push(S.f.tomas
-     ? {t:"Zeptám se Tomáše", fx:{e:5,v:10}, echo:1, log:["links","6. týden: zpětnou vazbu ti dal Tomáš místo šéfa."], res:"Tomáš ti dá upřímnou zpětnou vazbu."}
-     : {t:"Zeptám se kolegy", fx:{v:5}, res:"Pár rad dostaneš."});
-   return { p:"growth", title:"Zpětná vazba? Později.",
-     text:"Šéf zruší hodnoticí schůzku: „Je to dobrý.“",
-     echo: reb ? "Ve 4. týdnu jsi šéfovi ukázal(a) inzerát. Pamatuje si to." : null, choices:ch,
-     concept:["Sebedůvěra","Bez zpětné vazby nováček neví, jestli práci zvládá.","Bauer et al., 2007"] };
- },
+    {t:"Nechám to být", fx:{e:-5,d:-10}, p:{growth:"broken"}, set:["insecure"], log:["trust","6. týden: zpětnou vazbu jsi nedostal(a) a nejistota rostla."], res:"Nevíš, jestli tě po zkušebce nevyhodí."},
+    S.f.tomas
+     ? {t:"Zeptám se Tomáše", fx:{e:5,v:10}, echo:1, log:["links","6. týden: zpětnou vazbu ti dal Tomáš místo šéfa."], res:"Tomáš ti dá upřímnou zpětnou vazbu.", who:"tomas"}
+     : L("Zeptám se zkušeného kolegy","Odemkneš, když si v 1. týdnu najdeš spojence mezi kolegy."),
+    S.f.eliska
+     ? {t:"Porovnám se s Eliškou", fx:{d:-10,v:5}, set:["compare"], echo:1, log:["trust","6. týden: zjistil(a) jsi, že Eliška hodnocení dostala a ty ne."], res:"Eliška hodnocení dostala. Ty ne. Proč?", who:"eliska"}
+     : L("Porovnám se s druhým nováčkem","Odemkneš, když se v 1. týdnu seznámíš s druhou nováčkou.")
+   ],
+   concept:["Sebedůvěra","Bez zpětné vazby nováček neví, jestli práci zvládá.","Bauer et al., 2007"] }; },
 
  // 7
- S => ({ p:"benefit", title:"„Vydrž do konce zkušebky“",
-   text:`HR připomíná: po zkušebce dostaneš ${FIRM.benefits}.`,
+ S => ({ p:"benefit", title:"„Vydrž do konce zkušebky“", who:"petra",
+   text:`„Po zkušebce vás čeká: ${F().benefits}.“`,
    echo: S.d < 40 ? "Firmě už moc nevěříš. Benefity jsou teď hodně lákavé." : null,
    choices:[
     {t:"To se vyplatí vydržet", c:{calc:2}, set:["golden"], log:["calc","7. týden: rozhodl(a) ses vydržet kvůli benefitům."], res:"Najednou máš co ztratit."},
     {t:"Kvůli tomu tu nejsem", c:{aff:1}, log:["aff","7. týden: benefity pro tebe nebyly hlavní důvod."], res:"Benefity bereš jako bonus."},
-    {t:"Spočítám, o co bych přišel(a)", c:{calc:1}, set:["golden"], log:["calc","7. týden: spočítal(a) sis, o kolik bys odchodem přišel(a)."], res:"Pěkné číslo. Myslíš na něj pořád."}
+    {t:"Spočítám, o co bych přišel(a)", c:{calc:1}, set:["golden"], log:["calc","7. týden: spočítal(a) sis, o kolik bys odchodem přišel(a)."], res:"Pěkné číslo. Myslíš na něj pořád."},
+    S.f.hr
+     ? {t:"Zeptám se Petry, proč ty benefity", fx:{d:-5}, set:["truth"], echo:1, log:["trust","7. týden: Petra ti přiznala, že benefity jsou hlavně proti fluktuaci."], res:"Petra: „Upřímně? Lidi nám utíkají.“", who:"petra"}
+     : L("Zeptám se HR na pravý důvod","Odemkneš, když se v 1. týdnu ozveš na HR.")
    ],
-   concept:["Benefity nemotivují","Benefity snižují nespokojenost, ale spokojenost nevytvoří.","Herzberg et al., 1959"] }),
+   concept:["Benefity nemotivují","Benefity snižují nespokojenost, ale nemotivují. A jako podpora působí, jen když jsou dobrovolné.","Herzberg, 1959; Rhoades & Eisenberger, 2002"] }),
 
  // 8
  S => {
-   if(S.f.workhorse || S.f.alwayson) return { p:"balance", title:"Víkend? Tvůj.",
-     text:"Pátek 16:00. Šéf: „Prezentaci na pondělí vezmeš ty, ne?“",
+   const exp = S.f.workhorse || S.f.alwayson;
+   const eli = S.f.eliska
+     ? {t:"Rozdělím si to s Eliškou", fx:{e:-8,v:5,b:1}, need:8, echo:1, log:["links","8. týden: víkendovou práci jste si s Eliškou rozdělili."], res:"Ve dvou to jde rychleji. Neděle je tvoje.", who:"eliska"}
+     : L("Rozdělím si to s někým","Odemkneš, když se v 1. týdnu seznámíš s druhou nováčkou.");
+   if(exp) return { p:"balance", title:"Víkend? Tvůj.", who:"boss",
+     text:`„${cap(F().task)} na pondělí vezmeš ty, ne?“`,
      echo:"Naučil(a) jsi šéfa, že jsi vždycky k dispozici.",
      choices:[
       {t:"Vezmu to", fx:{e:-20,b:1}, c:{norm:1}, need:20, p:{balance:"broken"}, log:["work","8. týden: obětoval(a) jsi víkend – zase."], res:"Pondělí zvládnuté. Ty jsi prázdný(á)."},
-      {t:"Tentokrát ne", fx:{e:5,d:-5,b:-2}, log:["boss","8. týden: poprvé jsi šéfovi řekl(a) ne. Byl naštvaný."], res:"Šéf je překvapený. A naštvaný."}
+      {t:"Tentokrát ne", fx:{e:5,d:-5,b:-2}, log:["boss","8. týden: poprvé jsi šéfovi řekl(a) ne. Byl naštvaný."], res:"Šéf je překvapený. A naštvaný."},
+      eli
      ],
-     concept:["Model JD-R","Hodně požadavků + málo zdrojů = vyčerpání.","Maslach et al., 2001"] };
-   return { p:"balance", title:"Víkendová krize",
-     text:"Pátek 16:00. Klient chce prezentaci na pondělí.",
+     concept:["Model JD-R","Hodně požadavků + málo zdrojů = vyčerpání.","Demerouti et al., 2001"] };
+   return { p:"balance", title:"Víkendová krize", who:"boss",
+     text:`Pátek 16:00. „Potřebujeme ${F().task} na pondělí. Kdo to vezme?“`,
      choices:[
       {t:"Beru to", fx:{e:-20,v:5,b:2}, c:{norm:1}, need:20, set:["workhorse"], p:{balance:"broken"}, log:["work","8. týden: vzal(a) jsi víkendovou práci."], res:"Zvládnuto. Za cenu celého víkendu."},
       {t:"Odmítnu", fx:{e:5,d:-5,b:-1}, log:["boss","8. týden: víkendovou práci jsi odmítl(a)."], res:"Šéf jen řekne „dobře“. Tím tónem."},
-      {t:"Vezmu, ale chci volno", fx:{e:-10,b:1}, need:10, set:["owed"], p:{balance:"broken"}, log:["work","8. týden: za víkend ti slíbili volno."], res:"Volno ti slíbí. „Až bude klid.“"}
+      {t:"Vezmu, ale chci volno", fx:{e:-10,b:1}, need:10, set:["owed"], p:{balance:"broken"}, log:["work","8. týden: za víkend ti slíbili volno."], res:"Volno ti slíbí. „Až bude klid.“"},
+      eli
      ],
-     concept:["Model JD-R","Hodně požadavků + málo zdrojů = vyčerpání.","Maslach et al., 2001"] };
+     concept:["Model JD-R","Hodně požadavků + málo zdrojů = vyčerpání.","Demerouti et al., 2001"] };
  },
 
  // 9
- S => {
-   const g = S.f.golden;
-   return { p:"benefit", title:"Nabídka odjinud",
-     text:"Kamarád nabízí místo jinde. Menší plat, ale upřímně ti řekl i nevýhody.",
-     echo: g ? "Benefity jsou za 3 týdny. Těžko se od nich odchází." : null,
-     choices:[
-      {t: g ? "Ne, benefity jsou za rohem" : "Ne, už jsem tu dva měsíce", c:{calc:2}, set:["sunk"], log:["calc","9. týden: odmítl(a) jsi nabídku kvůli tomu, co už jsi investoval(a)."], res:"Škoda odejít. Ale škoda čeho?"},
-      {t:"Půjdu na pohovor", fx:{e:-5}, c:{aff:-1}, set:["offer"], log:["exit","9. týden: šel/šla jsi na pohovor jinam a máš nabídku."], res:"Pohovor byl upřímný. Máš nabídku v šuplíku."},
-      {t:"Ne, baví mě to tu", fx:{e:5}, c:{aff:2}, needD:45, log:["aff","9. týden: nabídku jsi odmítl(a), protože tě to tu baví."], res:"Nejzdravější důvod zůstat."}
-     ],
-     concept:["Utopené náklady","Zůstáváme kvůli tomu, co jsme už investovali.","Arkes & Blumer, 1985"] };
- },
+ S => { const g = S.f.golden; return { p:"benefit", title:"Nabídka odjinud", who:"kamarad",
+   text:"„Pojď k nám. Plat menší, a upřímně – občas je to chaos. Ale tým je super.“",
+   echo: g ? "Benefity jsou za 3 týdny. Těžko se od nich odchází." : null,
+   choices:[
+    {t: g ? "Ne, benefity jsou za rohem" : "Ne, už jsem tu dva měsíce", c:{calc:2}, set:["sunk"], log:["calc","9. týden: odmítl(a) jsi nabídku kvůli tomu, co už jsi investoval(a)."], res:"Škoda odejít. Ale škoda čeho?"},
+    {t:"Půjdu na pohovor", fx:{e:-5}, c:{aff:-1}, set:["offer"], log:["exit","9. týden: šel/šla jsi na pohovor a máš nabídku."], res:"Pohovor byl upřímný. Máš nabídku v šuplíku."},
+    {t:"Ne, baví mě to tu", fx:{e:5}, c:{aff:2}, needD:45, log:["aff","9. týden: nabídku jsi odmítl(a), protože tě to tu baví."], res:"Nejzdravější důvod zůstat."}
+   ],
+   concept:["Utopené náklady + RJP","Zůstáváme kvůli tomu, co jsme už investovali. A kdo přizná nevýhody, je věrohodnější.","Arkes & Blumer, 1985; Phillips, 1998"] }; },
 
  // 10
- S => {
-   const t = S.f.tomas, who = t ? "Tomáš" : "Kolegyně Jana";
-   const ch = [
-    {t:"Rozloučím se, zůstávám", fx:{d:-5,v: t?-20:-5}, log:["links", t?"10. týden: odešel Tomáš – tvůj jediný spojenec.":"10. týden: odešla Jana."], res: t ? "Bez Tomáše je to tu prázdné." : "Je tu o jednoho člověka míň."},
-    {t:"Zeptám se proč", fx:{d:-10}, set: t?["tomasOffer"]:["truth"], log: t?["exit","10. týden: Tomáš ti nabídl místo ve své nové firmě."]:["trust","10. týden: Jana ti potvrdila, že nejsi jediný/á."], res: t ? "Tomáš: „Pojď se mnou. Hledají lidi.“" : "Popíše přesně to, co zažíváš ty."},
-    {t:"Nemůžu nechat tým ve štychu", fx:{e:-5}, c:{norm:2}, log:["norm","10. týden: zůstal(a) jsi z povinnosti k týmu."], res:"Povinnost. Nebo tlak?"}
-   ];
-   if(S.f.truth || S.f.hr) ch.push({t:"Navrhnu HR rozhovory s odcházejícími", fx:{e:-5,b:-1}, c:{aff:1}, set:["voice"], echo:1, log:["voice","10. týden: navrhl(a) jsi HR, ať se ptá odcházejících proč."], res:"HR souhlasí. Šéf se tváří kysele."});
-   return { p:"family", title:`${t?"Tomáš":"Jana"} odchází`,
-     text:`${who} dává výpověď ve zkušebce. „Tady se nic nezmění.“`,
-     echo: t ? "Tvůj spojenec z 1. týdne odchází." : (S.f.truth||S.f.hr ? "Víš, jak to tu chodí. Můžeš s tím něco dělat." : null),
-     choices: ch, after: S => { S.f.tomasGone = true; },
-     concept:["Porušení je norma","Asi 55 % lidí zažije porušení slibů do 2 let.","Robinson & Rousseau, 1994"] };
- },
+ S => { const t = S.f.tomas; return { p:"family", title:`${t?"Tomáš":"Jana"} odchází`, who: t?"tomas":"jana",
+   text:"„Dávám výpověď ve zkušebce. Tady se nic nezmění.“",
+   echo: t ? "Tvůj spojenec z 1. týdne odchází." : null,
+   after: S => { S.f.tomasGone = true; },
+   choices:[
+    {t:"Rozloučím se, zůstávám", fx:{d:-5,v: t?-20:-5}, log:["links", t?"10. týden: odešel Tomáš – tvůj spojenec.":"10. týden: odešla Jana."], res: t ? "Bez Tomáše je to tu prázdné." : "Je tu o jednoho člověka míň."},
+    {t:"Zeptám se proč", fx:{d:-10}, set: t?["tomasOffer"]:["truth"], log: t?["exit","10. týden: Tomáš ti nabídl místo ve své nové firmě."]:["trust","10. týden: Jana ti potvrdila, že nejsi jediný/á."], res: t ? "„Pojď se mnou. Hledají lidi.“" : "Popíše přesně to, co zažíváš ty.", who: t?"tomas":"jana"},
+    {t:"Nemůžu nechat tým ve štychu", fx:{e:-5}, c:{norm:2}, log:["norm","10. týden: zůstal(a) jsi z povinnosti k týmu."], res:"Povinnost. Nebo tlak?"},
+    (S.f.truth || S.f.hr)
+     ? {t:"Navrhnu HR rozhovory s odcházejícími", fx:{e:-5,b:-1}, c:{aff:1}, set:["voice"], echo:1, log:["voice","10. týden: navrhl(a) jsi HR, ať se ptá odcházejících proč."], res:"Petra: „Skvělý nápad. Šéf nebude nadšený.“", who:"petra"}
+     : L("Navrhnu HR, ať zjistí, proč lidi odcházejí","Odemkneš, když zjistíš, jak to tu reálně chodí, nebo se ozveš HR.")
+   ],
+   concept:["Porušení je norma","Asi 55 % lidí zažije porušení slibů do 2 let.","Robinson & Rousseau, 1994"] }; },
 
  // 11
- S => {
-   const ch = [
+ S => ({ p:"flex", title:"„Od ledna bude líp“", who:"boss",
+   text:"„Od ledna spustíme home office a nový onboarding. Slibuju.“",
+   echo: S.f.voice ? "Tvůj návrh z 10. týdne se dostal až k vedení." : null,
+   choices:[
     {t:"Věřím mu", fx:{d:10}, c:{aff:1}, set:["believe"], log:["aff","11. týden: uvěřil(a) jsi šéfovu slibu."], res:"Vrací se ti nadšení."},
     {t:"Slibovat nic nestojí", fx:{d:-5}, set:["cynic"], log:["cynic","11. týden: šéfovi už nevěříš ani slovo."], res:"Možná máš pravdu. Možná jsi už cynik."},
-    {t:"Chci to písemně, s termínem", fx:{d:5}, set:["written"], log:["voice","11. týden: chtěl(a) jsi slib písemně."], res:"Šéf to rozešle mailem i s termínem."}
-   ];
-   if(S.f.voice) ch.push({t:"Nabídnu, že nový onboarding pomůžu udělat", fx:{e:-10,b:2}, c:{aff:2}, set:["changeAgent"], need:10, echo:1, log:["voice","11. týden: nabídl(a) ses, že pomůžeš změnit onboarding."], res:"Šéf překvapeně kývne. Máš projekt."});
-   return { p:"flex", title:"„Od ledna bude líp“",
-     text:"Šéf slibuje: od ledna home office a nový onboarding.",
-     echo: S.f.voice ? "Tvůj návrh z 10. týdne se dostal až k vedení." : null, choices:ch,
-     concept:["Levné vs. drahé signály","Sliby nic nestojí. Věrohodné jsou konkrétní kroky.","Bangerter et al., 2012"] };
- },
+    {t:"Chci to písemně, s termínem", fx:{d:5}, set:["written"], log:["voice","11. týden: chtěl(a) jsi slib písemně."], res:"Šéf to rozešle mailem i s termínem."},
+    S.f.voice
+     ? {t:"Nabídnu, že s onboardingem pomůžu", fx:{e:-10,b:2}, c:{aff:2}, set:["changeAgent"], need:10, echo:1, log:["voice","11. týden: nabídl(a) ses, že pomůžeš změnit onboarding."], res:"Šéf překvapeně kývne. Máš projekt."}
+     : L("Nabídnu, že změnu pomůžu udělat","Odemkneš, když v 10. týdnu dáš HR návrh na změnu.")
+   ],
+   concept:["Levné vs. drahé signály","Sliby nic nestojí. Věrohodné jsou konkrétní kroky.","Bangerter et al., 2012"] }),
 
  // 12
  S => {
-   const ch = [
+   const ech = [S.f.offer && "nabídku od Ondry", S.f.tomasOffer && "Tomášovu nabídku"].filter(Boolean);
+   return { p:"benefit", title:"Poslední den zkušebky", who:null,
+   text:"Zítra naskočí benefity. Pak už odchod nebude tak snadný.",
+   echo: ech.length ? "Máš v šuplíku " + ech.join(" a ") + "." : null,
+   choices:[
     {t:"Zůstávám", end:"stay"},
     {t:"Zůstanu, ale budu dělat jen minimum", end:"quiet"},
-    {t:"Odcházím", end:"leave"}
-   ];
-   if(S.f.offer) ch.push({t:"Beru nabídku od kamaráda", end:"offer", echo:1});
-   if(S.f.tomasOffer) ch.push({t:"Jdu za Tomášem", end:"tomas", echo:1});
-   const ech = [S.f.offer && "nabídku z 9. týdne", S.f.tomasOffer && "Tomášovu nabídku"].filter(Boolean);
-   return { p:"benefit", title:"Poslední den zkušebky",
-     text:`Zítra naskočí benefity. Pak už odchod nebude tak snadný.`,
-     echo: ech.length ? "Máš v šuplíku " + ech.join(" a ") + "." : null,
-     choices: ch,
-     concept:["Zkušební doba","Obě strany si ověřují, jestli to sedí. Odejít jde i bez důvodu.","§ 35 zákoníku práce"] };
+    {t:"Odcházím", end:"leave"},
+    S.f.offer ? {t:"Beru nabídku od Ondry", end:"offer", echo:1} : L("Beru nabídku odjinud","Odemkneš, když v 9. týdnu půjdeš na pohovor."),
+    S.f.tomasOffer ? {t:"Jdu za Tomášem", end:"tomas", echo:1} : L("Jdu za bývalým kolegou","Odemkneš, když se kolegy při odchodu zeptáš proč."),
+    (S.f.eliska && S.d < 50) ? {t:"Odcházíme s Eliškou spolu", end:"together", echo:1}
+      : L("Odejdu spolu s někým", S.f.eliska ? "Odemkneš, když firmě přestaneš věřit (důvěra pod polovinu)." : "Odemkneš s parťákem z 1. týdne – a když firmě přestanete věřit.")
+   ],
+   concept:["Zkušební doba","Obě strany si ověřují, jestli to sedí. Odejít jde i bez důvodu.","§ 35 zákoníku práce"] };
  }
+];
+
+/* ================= NÁHODNÉ UDÁLOSTI ================= */
+const EVENTS = [
+ {id:"flu", ic:"🤒", t:"Chytil(a) jsi chřipku. Do práce jdeš i tak.", fx:{e:-10}},
+ {id:"praise", ic:"⭐", t:"Klient tě pochválil před šéfem.", fx:{e:5,b:1}},
+ {id:"reorg", ic:"🏗️", t:"Reorganizace! Nikdo neví, kdo komu šéfuje.", fx:{d:-10}},
+ {id:"team", ic:"🎳", t:"Teambuilding v bowlingu.", fx:{v:10,e:-5}},
+ {id:"credit", ic:"😤", t:"Kolega si přivlastnil tvou práci.", fx:{d:-5,v:-5}},
+ {id:"repair", ic:"🔧", t:"Kancelář zavřená kvůli opravě – den doma!", fx:{e:10}},
+ {id:"pay", ic:"💸", t:"Přišla výplata. Aspoň něco.", fx:{}, c:{calc:1}},
+ {id:"beer", ic:"🍺", t:"Tomáš tě vzal na pivo.", fx:{v:5,e:5}, cond:S=>S.f.tomas && !S.f.tomasGone},
+ {id:"eli", ic:"😢", t:"Eliška se ti svěří, že to chce vzdát.", fx:{d:-5,v:5}, cond:S=>S.f.eliska},
+ {id:"deadline", ic:"⏰", t:"Šéf posunul termín o týden dřív.", fx:{e:-10}}
 ];
 
 /* ================= KONCE ================= */
 const ENDINGS = {
-  sacrifice:{ic:"🪫", t:"Obětoval(a) ses", s:"Bral(a) jsi všechno – večery i víkendy. Energie došla dřív než zkušebka.", tags:["work"], th:"JD-R: vysoké požadavky bez zdrojů vedou k vyčerpání."},
-  empty:{ic:"🪫", t:"Došla ti energie", s:"Nebylo z čeho brát. Ne vyhoření – na to jsi tu krátce – ale vyčerpání a deziluze.", tags:["links","trust"], th:"JD-R: chyběly zdroje – kolegové, podpora, odpočinek."},
-  fired:{ic:"✂️", t:"Neprošel(a) jsi zkušebkou", s:"Šéf ukončil pracovní poměr. Zkušebka platí pro obě strany.", tags:["boss"], th:"P–O fit: firma si ověřuje, jestli zapadáš do její (skutečné) kultury."},
-  runEarly:{ic:"🏃", t:"Útěk v prvních týdnech", s:"Šok z reality přišel rychle a ty jsi neváhal(a).", tags:["trust","links"], th:"Reality shock: realita se od inzerátu lišila hned od začátku."},
-  runMid:{ic:"🚪", t:"Odchod v půlce zkušebky", s:"Viděl(a) jsi dost. Zkušebku jsi využil(a) přesně k tomu, k čemu je.", tags:["trust","boss","links"], th:"Porušení psychologické smlouvy vede k odchodu."},
-  leave:{ic:"🚪", t:"Odchod těsně před benefity", s:"Benefity byly na dosah, a stejně jsi odešel/odešla.", tags:["calc","trust"], th:"Utopené náklady tě nezastavily."},
-  offer:{ic:"🌱", t:"Nový start", s:"Jdeš tam, kde ti ukázali i nevýhody práce.", tags:["exit","trust"], th:"Realistický náhled na práci (RJP) je věrohodnější slib."},
-  tomas:{ic:"🤝", t:"Za Tomášem", s:"Vazba s kolegou byla silnější než firma.", tags:["links","exit"], th:"Job embeddedness: vazby drží – i když se stěhují jinam."},
-  quiet:{ic:"😶", t:"Tichý odchod", s:"Zůstáváš, ale jen tělem. Děláš minimum.", tags:["cynic","trust","calc"], th:"Cynismus a odstup – druhá dimenze podle Maslachové."},
-  change:{ic:"📣", t:"Hlas změny", s:"Místo odchodu měníš firmu zevnitř. Nový onboarding je tvůj projekt.", tags:["voice"], th:"Nováček, který vidí rozdíl slibů a reality, ho umí pojmenovat nejlíp."},
-  favorite:{ic:"🏆", t:"Šéfův oblíbenec", s:"Šéf tě miluje a čeká povýšení. Za cenu večerů a víkendů.", tags:["work","boss"], th:"Odměňuje se dostupnost – skutečná hodnota, ne ta z inzerátu (Schein)."},
-  happy:{ic:"💚", t:"Spokojený nováček", s:"Zůstáváš, protože chceš. Lidi tě drží víc než benefity.", tags:["aff","links"], th:"Afektivní závazek – jediný, který dlouhodobě funguje."},
-  golden:{ic:"⛓️", t:"Zlatá pouta", s:"Drží tě benefity a investovaný čas, ne firma.", tags:["calc"], th:"Kalkulativní závazek – benefity jako psychologická past."},
-  duty:{ic:"🏋️", t:"Tahoun týmu", s:"Zůstáváš z povinnosti. Bez tebe by to tým nedal – myslíš si.", tags:["norm","work"], th:"Normativní závazek – povinnost spokojenost nepřinese."}
+  sacrifice:{ic:"🪫", mood:"bad", t:"Obětoval(a) ses", s:"Bral(a) jsi všechno – večery i víkendy. Energie došla dřív než zkušebka.", tags:["work"], th:"JD-R: vysoké požadavky bez zdrojů vedou k vyčerpání.", q:"Proč nováčci berou práci navíc, i když je to vyčerpává?"},
+  empty:{ic:"🪫", mood:"bad", t:"Došla ti energie", s:"Nebylo z čeho brát. Ne vyhoření – na to jsi tu krátce – ale vyčerpání a deziluze.", tags:["links","trust"], th:"JD-R: chyběly zdroje – kolegové, podpora, odpočinek.", q:"Co by firma musela udělat, aby nováček neztratil energii už v prvních týdnech?"},
+  fired:{ic:"✂️", mood:"bad", t:"Neprošel(a) jsi zkušebkou", s:"Šéf ukončil pracovní poměr. Zkušebka platí pro obě strany.", tags:["boss"], th:"P–O fit: firma si ověřuje, jestli zapadáš do její skutečné kultury.", q:"Je správné, že nováček, který se ozve, může neprojít zkušebkou?"},
+  runEarly:{ic:"🏃", mood:"mid", t:"Útěk v prvních týdnech", s:"Šok z reality přišel rychle a ty jsi neváhal(a).", tags:["trust","links"], th:"Reality shock: realita se od inzerátu lišila hned od začátku.", q:"Odešli byste z práce po pár týdnech? Co by vám v tom bránilo?"},
+  runMid:{ic:"🚪", mood:"mid", t:"Odchod v půlce zkušebky", s:"Viděl(a) jsi dost. Zkušebku jsi využil(a) přesně k tomu, k čemu je.", tags:["trust","boss","links"], th:"Porušení psychologické smlouvy vede k odchodu.", q:"Je odchod ve zkušebce selhání, nebo rozumné rozhodnutí?"},
+  leave:{ic:"🚪", mood:"mid", t:"Odchod těsně před benefity", s:"Benefity byly na dosah, a stejně jsi odešel/odešla.", tags:["calc","trust"], th:"Utopené náklady tě nezastavily.", q:"Kolik byste museli dostat, abyste zůstali v práci, která vás nebaví?"},
+  offer:{ic:"🌱", mood:"good", t:"Nový start", s:"Jdeš tam, kde ti ukázali i nevýhody práce.", tags:["exit","trust"], th:"Realistický náhled na práci (RJP) je věrohodnější slib.", q:"Věřili byste víc firmě, která v inzerátu přizná nevýhody?"},
+  tomas:{ic:"🤝", mood:"good", t:"Za Tomášem", s:"Vazba s kolegou byla silnější než firma.", tags:["links","exit"], th:"Job embeddedness: vazby drží – i když se stěhují jinam.", q:"Šli byste do nové práce kvůli kolegovi?"},
+  together:{ic:"🫂", mood:"good", t:"Spolu pryč", s:"S Eliškou jste odešli spolu. Sdílená deziluze je silná.", tags:["links","trust","voice"], th:"Vazby mezi nováčky usnadní i společný odchod – firma přijde o dva lidi najednou.", q:"Je snazší odejít, když odchází i někdo další?"},
+  quiet:{ic:"😶", mood:"bad", t:"Tichý odchod", s:"Zůstáváš, ale jen tělem. Děláš minimum.", tags:["cynic","trust","calc"], th:"Cynismus a odstup – druhá dimenze podle Maslachové.", q:"Je „quiet quitting“ lenost, nebo rozumná reakce na porušené sliby?"},
+  change:{ic:"📣", mood:"good", t:"Hlas změny", s:"Místo odchodu měníš firmu zevnitř. Nový onboarding je tvůj projekt.", tags:["voice"], th:"Nováček vidí rozdíl slibů a reality nejlíp – a umí ho pojmenovat.", q:"Má nováček vůbec šanci něco ve firmě změnit?"},
+  favorite:{ic:"🏆", mood:"mid", t:"Šéfův oblíbenec", s:"Šéf tě miluje a čeká povýšení. Za cenu večerů a víkendů.", tags:["work","boss"], th:"Odměňuje se dostupnost – skutečná hodnota, ne ta z inzerátu (Schein).", q:"Vyplatí se být vždy k dispozici, když vás za to šéf odmění?"},
+  happy:{ic:"💚", mood:"good", t:"Spokojený nováček", s:"Zůstáváš, protože chceš. Lidi tě drží víc než benefity.", tags:["aff","links"], th:"Afektivní závazek – jediný, který dlouhodobě funguje.", q:"Co vás v práci drží nejvíc – lidi, peníze, nebo smysl?"},
+  golden:{ic:"⛓️", mood:"bad", t:"Zlatá pouta", s:"Drží tě benefity a investovaný čas, ne firma.", tags:["calc"], th:"Kalkulativní závazek – benefity jako psychologická past.", q:"Vydrželi byste rok v práci, která vás nebaví, kvůli benefitům?"},
+  duty:{ic:"🏋️", mood:"mid", t:"Tahoun týmu", s:"Zůstáváš z povinnosti. Bez tebe by to tým nedal – myslíš si.", tags:["norm","work"], th:"Normativní závazek – povinnost spokojenost nepřinese.", q:"Je loajalita k týmu dobrý důvod zůstat v nefunkční firmě?"}
 };
 const ENDING_IDS = Object.keys(ENDINGS);
-
 const LABELS = { e:"Energie", d:"Důvěra", v:"Vazby" };
-const PNAMES = FIRM.promises;
 
-/* ================= STAV ================= */
+/* ================= STAV + POMOCNÉ ================= */
 let S, cur;
-function reset(){ S = { i:0, e:70, d:70, v:10, b:0, aff:0, calc:0, norm:0, f:{}, log:[], prom:{}, concepts:[] }; }
+const F = () => S.firm;
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+function reset(){ S = { firm:FIRMS[0], i:0, e:70, d:70, v:10, b:0, aff:0, calc:0, norm:0, f:{}, log:[], prom:{}, concepts:[], ev:[], pv:{e:70,d:70,v:10} }; }
 const clamp = x => Math.max(0, Math.min(100, x));
 const $app = document.getElementById("app");
-function render(html){ $app.innerHTML = `<div class="fade">${html}</div><footer>3PS212 Organizační chování · VŠE</footer>`; window.scrollTo(0,0); }
-
-function found(){ try{ return JSON.parse(localStorage.getItem("90dni-konce")||"[]"); }catch(e){ return []; } }
-function saveFound(id){ try{ const f=found(); if(!f.includes(id)){ f.push(id); localStorage.setItem("90dni-konce", JSON.stringify(f)); } }catch(e){} }
-
-/* týdenní zátěž podle JD-R: požadavky ubírají, vazby a šéf jsou zdroje */
-function weeklyDrain(){
-  let x = 3, why = [];
-  if(S.f.alwayson){ x += 2; why.push("maily večer"); }
-  if(S.f.workhorse){ x += 2; why.push("práce navíc"); }
-  if(S.f.insecure){ x += 2; why.push("nejistota"); }
-  if(S.f.lonely){ x += 2; why.push("samota"); }
-  if(S.v >= 40){ x -= 2; why.push("kolegové pomáhají"); }
-  if(S.f.favorite){ x -= 2; why.push("home office"); }
-  return { x: Math.max(1,x), why };
+function render(html, cls=""){
+  $app.innerHTML = `<div class="fade ${cls}">${html}</div><footer>3PS212 Organizační chování · VŠE</footer>`;
+  window.scrollTo(0,0);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    document.querySelectorAll("[data-w]").forEach(el => el.style.width = el.dataset.w + "%");
+  }));
 }
-const bossFace = () => S.b >= 3 ? "😀" : S.b >= 1 ? "🙂" : S.b > -2 ? "😐" : S.b > -4 ? "😠" : "🤬";
+function store(k, v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }catch(e){ return null; } }
+function found(){ try{ return JSON.parse(store("90dni-konce")||"[]"); }catch(e){ return []; } }
+function saveFound(id){ const f=found(); if(!f.includes(id)){ f.push(id); store("90dni-konce", JSON.stringify(f)); } }
+
+/* ================= ZVUK ================= */
+let muted = store("90dni-mute")==="1", AC = null;
+document.getElementById("mute").textContent = muted ? "🔇" : "🔊";
+function toggleMute(){ muted = !muted; store("90dni-mute", muted?"1":"0"); document.getElementById("mute").textContent = muted ? "🔇" : "🔊"; if(!muted) sfx("click"); }
+function tone(f, start, dur, type="sine", vol=.12){
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = type; o.frequency.value = f; o.connect(g); g.connect(AC.destination);
+  const t = AC.currentTime + start;
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t+.01); g.gain.exponentialRampToValueAtTime(.0001, t+dur);
+  o.start(t); o.stop(t+dur+.02);
+}
+function sfx(kind){
+  if(muted) return;
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==="suspended") AC.resume();
+    ({
+      click:()=>tone(660,0,.06,"triangle",.08),
+      good:()=>{tone(523,0,.12);tone(784,.09,.18);},
+      bad:()=>{tone(220,0,.18,"sawtooth",.06);tone(165,.12,.25,"sawtooth",.06);},
+      event:()=>{tone(880,0,.1,"square",.05);tone(1175,.1,.15,"square",.05);},
+      win:()=>[523,659,784,1047].forEach((f,i)=>tone(f,i*.11,.3,"triangle",.1)),
+      lose:()=>[392,330,262,196].forEach((f,i)=>tone(f,i*.15,.35,"sawtooth",.05)),
+      mid:()=>{tone(440,0,.2,"triangle");tone(554,.15,.3,"triangle");}
+    })[kind]();
+  }catch(e){}
+}
+function flash(kind){ const el=document.getElementById("flash"); el.className=""; void el.offsetWidth; el.className=kind; }
+function confetti(){
+  const cols=["#e2552b","#2f9e6a","#3a6fd8","#c69a1e","#5b3fb5"];
+  for(let i=0;i<60;i++){
+    const c=document.createElement("div"); c.className="confetti";
+    c.style.left=Math.random()*100+"vw"; c.style.background=cols[i%cols.length];
+    c.style.animationDuration=(1.8+Math.random()*1.6)+"s"; c.style.animationDelay=(Math.random()*.4)+"s";
+    document.body.appendChild(c); setTimeout(()=>c.remove(),4000);
+  }
+}
+
+/* ================= SDÍLENÉ VÝSLEDKY ================= */
+async function sendResult(id){
+  if(!RESULTS_URL) return;
+  const today = new Date().toISOString().slice(0,10);
+  if(store("90dni-odeslano")===today) return;       // každý hráč se počítá jen jednou za den (první hra)
+  try{
+    await fetch(`${RESULTS_URL}?action=add&end=${id}&firm=${F().id}`);
+    store("90dni-odeslano", today);
+  }catch(e){}
+}
+async function getStats(){
+  if(!RESULTS_URL) return null;
+  try{ const r = await fetch(`${RESULTS_URL}?action=stats`); return await r.json(); }catch(e){ return null; }
+}
+function statsHTML(st, mine){
+  if(!RESULTS_URL) return `<p class="small muted" style="margin:0">Výsledky třídy zatím nejsou zapojené.</p>`;
+  if(!st) return `<p class="small muted" style="margin:0">Výsledky se nepodařilo načíst. Zkus to za chvíli.</p>`;
+  const tot = st.total || 0;
+  if(!tot) return `<p class="small muted" style="margin:0">Zatím nikdo nedohrál. Buď první!</p>`;
+  const rows = Object.entries(st.counts||{}).filter(([k])=>ENDINGS[k]).sort((a,b)=>b[1]-a[1]);
+  return `<p class="small muted" style="margin:0">Dohrálo ${tot} ${tot===1?"hráč":tot<5?"hráči":"hráčů"} (počítá se první hra každého)</p>` +
+    rows.map(([k,n])=>`<div class="meter ${k===mine?'me':''}"><span>${ENDINGS[k].ic} ${ENDINGS[k].t}</span><div class="bar"><i data-w="${Math.round(n/tot*100)}" style="width:0"></i></div><b>${n}</b></div>`).join("");
+}
+async function fillStats(mine){
+  const box = document.getElementById("stats"); if(!box) return;
+  const st = await getStats();
+  box.innerHTML = statsHTML(st, mine);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>box.querySelectorAll("[data-w]").forEach(el=>el.style.width=el.dataset.w+"%")));
+}
 
 /* ================= OBRAZOVKY ================= */
+function gallery(me){
+  const f = found();
+  return `<div class="gallery">${ENDING_IDS.map(id=>{
+    const ok = f.includes(id);
+    return `<div class="tile ${ok?'':'no'} ${id===me?'me':''}">${ok?ENDINGS[id].ic:'?'}<span class="tt">${ok?ENDINGS[id].t:'Neobjeveno'}</span></div>`;
+  }).join("")}</div>`;
+}
+
 function intro(){
   reset();
   const n = found().length;
   render(`
-  <div class="card hero stack">
-    <span class="tag">Hra k prezentaci</span>
-    <h1>90 <span>dní</span></h1>
-    <p style="font-size:1.1rem;margin:4px 0 0">Přežiješ zkušební dobu?</p>
-    <p class="muted" style="margin:0">12 týdnů, 12 rozhodnutí. Firma si je pamatuje. ${ENDING_IDS.length} možných konců.</p>
-    ${n ? `<p class="small" style="margin:0">Objevené konce: <b>${n} / ${ENDING_IDS.length}</b></p>` : ""}
-    <button class="btn primary" onclick="adScreen()">Začít →</button>
+  <div class="stack">
+    <div class="card hero stack">
+      <span class="tag">Hra k prezentaci</span>
+      <h1>90 <span>dní</span></h1>
+      <p style="font-size:1.1rem;margin:4px 0 0">Přežiješ zkušební dobu?</p>
+      <p class="muted" style="margin:0">12 týdnů, 12 rozhodnutí. Firma si je pamatuje.</p>
+      <button class="btn primary" onclick="sfx('click');pickFirm()">Začít →</button>
+    </div>
+    <div class="card stack">
+      <h3>Konce: ${n} / ${ENDING_IDS.length}</h3>
+      ${gallery()}
+    </div>
+    ${RESULTS_URL ? `<button class="btn ghost" onclick="sfx('click');classScreen()">📊 Výsledky třídy</button>` : ""}
   </div>`);
 }
 
-function adScreen(){
+function classScreen(){
+  render(`<div class="card stack"><h2>📊 Výsledky třídy</h2><div id="stats" class="stack"><p class="muted small">Načítám…</p></div>
+    <button class="btn primary" onclick="intro()">Zpět</button></div>`);
+  fillStats(null);
+}
+
+function pickFirm(){
   render(`
-  <div class="card stack">
-    <span class="tag">Inzerát</span>
-    <div><h2>${FIRM.name}</h2><div class="muted">hledá: ${FIRM.role}</div></div>
-    <ul class="plist">${Object.values(PNAMES).map(p=>`<li>${p}</li>`).join("")}</ul>
-    <div class="ben">🎁 Po zkušební době: ${FIRM.benefits}</div>
-    <p class="small muted" style="margin:0">Tohle jsou sliby, se kterými nastupuješ. Uvidíme, kolik jich platí.</p>
-    <button class="btn primary" onclick="startGame()">Nastoupit →</button>
+  <div class="stack">
+    <h2>Vyber si inzerát</h2>
+    ${FIRMS.map((f,i)=>`
+      <button class="ad" onclick="sfx('good');start(${i})">
+        <div class="firm">${f.name} <span class="muted small" style="font-family:Inter;font-weight:400">· ${f.kind}</span></div>
+        <div class="small muted">hledá: ${f.role}</div>
+        <ul>${Object.values(f.promises).map(p=>`<li>${p}</li>`).join("")}</ul>
+        <div class="ben">🎁 Po zkušebce: ${f.benefits}</div>
+      </button>`).join("")}
+    <p class="small muted" style="margin:0">Sliby z inzerátu jsou tvoje psychologická smlouva. Uvidíme, kolik jich platí.</p>
   </div>`);
 }
-function startGame(){ addConcept("Psychologická smlouva"); scene(); }
+function start(i){ S.firm = FIRMS[i]; addConcept("Psychologická smlouva"); scene(); }
 function addConcept(n){ if(!S.concepts.includes(n)) S.concepts.push(n); }
 
+function weeklyDrain(){
+  let x = 3, why = [];
+  if(S.f.alwayson){ x += 2; why.push("zprávy večer"); }
+  if(S.f.workhorse){ x += 2; why.push("práce navíc"); }
+  if(S.f.insecure){ x += 2; why.push("nejistota"); }
+  if(S.f.lonely){ x += 2; why.push("samota"); }
+  if(S.v >= 40){ x -= 2; why.push("kolegové pomáhají"); }
+  if(S.f.favorite || S.f.duo){ x -= 2; why.push("home office"); }
+  return { x: Math.max(1,x), why };
+}
+const bossFace = () => S.b >= 3 ? "😀" : S.b >= 1 ? "🙂" : S.b > -2 ? "😐" : S.b > -4 ? "😠" : "🤬";
+
 function hud(shown){
-  const bar = (k,col) => `<div class="stat">${LABELS[k]}<div class="bar"><i style="width:${S[k]}%;background:${col}"></i></div></div>`;
+  const bar = (k,col) => `<div class="stat">${LABELS[k]}<div class="bar"><i data-w="${S[k]}" style="width:${S.pv[k]}%;background:${col}"></i></div></div>`;
   const dr = weeklyDrain();
-  return `
+  const out = `
   <div class="hud">
-    <div class="hudtop"><div class="week">Týden ${shown} / 12</div><div class="small">Šéf ${bossFace()}</div></div>
+    <div class="hudtop"><div class="week">Týden ${shown} / 12</div><div class="small">${F().name} · šéf ${bossFace()}</div></div>
     <div class="progress"><i style="width:${(S.i/12)*100}%"></i></div>
     <div class="stats">${bar("e","var(--energy)")}${bar("d","var(--trust)")}${bar("v","var(--links)")}</div>
-    <div class="bens">⚡ Práce ti každý týden ubere <b style="color:var(--accent)">−${dr.x}</b> energie</div>
+    <div class="drain">⚡ Práce ti každý týden ubere <b>−${dr.x}</b> energie</div>
   </div>`;
+  S.pv = {e:S.e, d:S.d, v:S.v};
+  return out;
+}
+
+function whoBlock(id, text){
+  if(!id) return `<p style="margin:0">${text}</p>`;
+  return `<div class="who">${avatar(id)}<div><div class="nm">${WHO()[id]}</div><div class="bubble">${text}</div></div></div>`;
 }
 
 function scene(){
   cur = WEEKS[S.i](S);
   const promise = cur.p==="benefit"
-      ? `<div class="promise"><b>Inzerát</b>🎁 ${FIRM.benefits}</div>`
-      : `<div class="promise"><b>Inzerát slíbil</b>${PNAMES[cur.p]}</div>`;
+      ? `<div class="promise"><b>Inzerát</b>🎁 ${F().benefits}</div>`
+      : `<div class="promise"><b>Inzerát slíbil</b>${F().promises[cur.p]}</div>`;
   render(`${hud(S.i+1)}
   <div class="card scene stack">
     ${promise}
     ${cur.echo ? `<div class="echo">🔁 ${cur.echo}</div>` : ""}
     <h2>${cur.title}</h2>
-    <p style="margin:0">${cur.text}</p>
+    ${whoBlock(cur.who, cur.text)}
     <div class="choices">
       ${cur.choices.map((c,j)=>{
-        const tired = c.need && S.e < c.need;
-        const doubt = c.needD && S.d < c.needD;
-        const lock = tired ? "Nemáš na to sílu" : doubt ? "Tomu sám/sama nevěříš" : "";
-        return `<button class="btn ${c.echo?'btn-echo':''}" ${lock?'disabled':''} onclick="choose(${j})">${c.t}${lock?`<span class="lock">${lock}</span>`:''}</button>`;
+        if(c.lock) return `<button class="btn locked" disabled>🔒 ${c.t}<span class="lock">${c.lock}</span></button>`;
+        const tired = c.need && S.e < c.need, doubt = c.needD && S.d < c.needD;
+        if(tired || doubt) return `<button class="btn locked tired" disabled>${c.t}<span class="lock">${tired?"Nemáš na to sílu":"Tomu sám/sama nevěříš"}</span></button>`;
+        return `<button class="btn ${c.echo?'btn-echo':''}" onclick="choose(${j})">${c.echo?'🔁 ':''}${c.t}</button>`;
       }).join("")}
     </div>
   </div>
-  ${S.i < 11 ? `<div style="margin-top:14px"><button class="btn ghost" onclick="quitConfirm()">Dát výpověď hned</button></div>` : ""}`);
+  ${S.i < 11 ? `<div style="margin-top:14px"><button class="btn ghost" onclick="sfx('click');quitConfirm()">Dát výpověď hned</button></div>` : ""}`);
+}
+
+function applyFx(fx, c, chips){
+  let sum = 0;
+  for(const k of ["e","d","v"]){
+    const dv = (fx||{})[k]||0;
+    if(dv){ S[k] = clamp(S[k]+dv); sum += dv; chips.push(`<span class="d ${dv>0?'up':'down'}">${LABELS[k]} ${dv>0?'+':'−'}${Math.abs(dv)}</span>`); }
+  }
+  if(fx && fx.b){ S.b += fx.b; chips.push(`<span class="d ${fx.b>0?'up':'down'}">Šéf ${fx.b>0?'👍':'👎'}</span>`); }
+  if(c) for(const k in c) S[k] += c[k];
+  return sum;
 }
 
 function choose(j){
@@ -425,43 +614,55 @@ function choose(j){
   addConcept(cur.concept[0]);
   if(c.end){ S.i++; return finish(c.end); }
 
-  const deltas = [];
-  const fx = c.fx || {};
-  for(const k of ["e","d","v"]){
-    const dv = fx[k]||0;
-    if(dv){ S[k] = clamp(S[k]+dv); deltas.push(`<span class="d ${dv>0?'up':'down'}">${LABELS[k]} ${dv>0?'+':'−'}${Math.abs(dv)}</span>`); }
-  }
-  if(fx.b){ S.b += fx.b; deltas.push(`<span class="d ${fx.b>0?'up':'down'}">Šéf ${fx.b>0?'👍':'👎'}</span>`); }
-  if(c.c) for(const k in c.c) S[k] += c.c[k];
+  const chips = [];
+  let sum = applyFx(c.fx, c.c, chips);
   if(c.p) Object.assign(S.prom, c.p);
   const newFlag = (c.set||[]).some(f => !S.f[f]);
   (c.set||[]).forEach(f => S.f[f] = true);
   if(c.log) S.log.push(c.log);
   if(cur.after) cur.after(S);
 
-  // týdenní zátěž
+  // týdenní zátěž (JD-R)
   const dr = weeklyDrain();
   S.e = clamp(S.e - dr.x);
-  deltas.push(`<span class="d down">Týden v práci −${dr.x}${dr.why.length?` <span class="dw">(${dr.why.join(", ")})</span>`:""}</span>`);
+  chips.push(`<span class="d down">Týden v práci −${dr.x}${dr.why.length?` <span class="dw">(${dr.why.join(", ")})</span>`:""}</span>`);
+
+  // náhodná událost
+  let evHTML = "";
+  if(week >= 2 && week <= 10 && Math.random() < 0.35){
+    const pool = EVENTS.filter(e => !S.ev.includes(e.id) && (!e.cond || e.cond(S)));
+    if(pool.length){
+      const ev = pool[Math.floor(Math.random()*pool.length)];
+      S.ev.push(ev.id);
+      const ech = []; sum += applyFx(ev.fx, ev.c, ech);
+      if(ev.c && ev.c.calc) ech.push(`<span class="d">Benefity táhnou</span>`);
+      evHTML = `<div class="event"><b>📰 Událost týdne</b><div style="margin:4px 0 8px">${ev.ic} ${ev.t}</div><div class="deltas">${ech.join("")}</div></div>`;
+    }
+  }
   S.i++;
 
-  let next = `<button class="btn primary" onclick="scene()">Týden ${S.i+1} →</button>`;
+  let next = `<button class="btn primary" onclick="sfx('click');scene()">Týden ${S.i+1} →</button>`;
   if(S.e <= 0) next = `<button class="btn primary" onclick="finish('energy')">Dál →</button>`;
   else if(S.b <= -4 && week >= 6) next = `<button class="btn primary" onclick="finish('fired')">Šéf si tě volá… →</button>`;
 
   render(`${hud(week)}
   <div class="card stack">
-    <p style="margin:0;font-size:1.15rem;font-weight:500">${c.res}</p>
-    <div class="deltas">${deltas.join("")}</div>
+    ${whoBlock(c.who, `<span style="font-size:1.1rem;font-weight:500">${c.res}</span>`)}
+    <div class="deltas">${chips.join("")}</div>
     ${newFlag ? `<div class="teaser">🔁 Tohle se ti ještě vrátí.</div>` : ""}
+    ${evHTML}
     ${S.e>0 && S.e < 20 ? `<div class="warn">⚠️ Jsi na dně. Další týden to nemusíš dát.</div>` : ""}
     <details class="concept">
-      <summary><span class="name">💡 ${cur.concept[0]}</span></summary>
+      <summary>💡 ${cur.concept[0]}</summary>
       <p class="small" style="margin:6px 0 2px">${cur.concept[1]}</p>
       <div class="src">${cur.concept[2]}</div>
     </details>
     ${next}
   </div>`);
+  const total = sum - dr.x;
+  if(total <= -15 || S.e < 20){ flash("bad"); sfx("bad"); }
+  else if(total >= 10){ flash("good"); sfx("good"); }
+  else sfx(evHTML ? "event" : "click");
 }
 
 function quitConfirm(){
@@ -470,7 +671,7 @@ function quitConfirm(){
     <h2>Opravdu odejít?</h2>
     <p style="margin:0">Ve zkušebce můžeš odejít kdykoli i bez důvodu. Benefity ale propadnou.</p>
     <button class="btn primary" onclick="finish('quit')">Odcházím</button>
-    <button class="btn" style="text-align:center" onclick="scene()">Ještě vydržím</button>
+    <button class="btn" style="text-align:center" onclick="sfx('click');scene()">Ještě vydržím</button>
   </div>`);
 }
 
@@ -485,12 +686,8 @@ function commit(){
 
 function pickEnding(kind){
   if(kind==="energy") return (S.f.workhorse || S.f.alwayson) ? "sacrifice" : "empty";
-  if(kind==="fired") return "fired";
+  if(["fired","leave","offer","tomas","quiet","together"].includes(kind)) return kind;
   if(kind==="quit") return S.i <= 5 ? "runEarly" : "runMid";
-  if(kind==="leave") return "leave";
-  if(kind==="offer") return "offer";
-  if(kind==="tomas") return "tomas";
-  if(kind==="quiet") return "quiet";
   // zůstává
   if(S.f.changeAgent) return "change";
   if(S.b >= 4 && (S.f.workhorse || S.f.alwayson)) return "favorite";
@@ -502,15 +699,14 @@ function pickEnding(kind){
 
 function finish(kind){
   const id = pickEnding(kind), E = ENDINGS[id];
+  const isNew = !found().includes(id);
   saveFound(id);
-  const all = found();
+  sendResult(id);
 
-  // proč se to stalo – záznamy hráčových rozhodnutí, které k danému konci vedly
   let why = S.log.filter(l => E.tags.includes(l[0])).map(l=>l[1]);
-  if(why.length < 2) why = why.concat(S.log.filter(l => !E.tags.includes(l[0])).map(l=>l[1]).slice(-2+why.length));
+  if(why.length < 2) why = why.concat(S.log.filter(l => !E.tags.includes(l[0])).map(l=>l[1]).slice(-(2-why.length)));
   why = why.slice(-3);
 
-  // epilog
   let epi = "";
   if(["happy","golden","duty","favorite","quiet","change"].includes(id)){
     if(S.f.changeAgent) epi = "📅 Leden: nový onboarding je venku. Další nováček má buddyho, který má čas.";
@@ -519,21 +715,18 @@ function finish(kind){
     else epi = "📅 Leden: nic se nezměnilo.";
   }
 
-  const kept = Object.keys(PNAMES).filter(k=>S.prom[k]==="kept").length;
-  const plist = Object.keys(PNAMES).map(k=>{
-    const st = S.prom[k]; const ic = st==="kept"?"✅":st==="broken"?"❌":"➖";
-    return `<li><span>${ic}</span> ${PNAMES[k]}</li>`;
-  }).join("");
-
+  const P = F().promises;
+  const kept = Object.keys(P).filter(k=>S.prom[k]==="kept").length;
+  const plist = Object.keys(P).map(k=>{ const st=S.prom[k]; return `<li>${st==="kept"?"✅":st==="broken"?"❌":"➖"} ${P[k]}</li>`; }).join("");
   const c = commit();
-  const meter = k => `<div class="meter"><span>${{aff:"Afektivní",calc:"Kalkulativní",norm:"Normativní"}[k]}</span><div class="bar"><i style="width:${c[k]}%"></i></div><b>${c[k]}%</b></div>`;
+  const meter = k => `<div class="meter"><span>${{aff:"Afektivní",calc:"Kalkulativní",norm:"Normativní"}[k]}</span><div class="bar"><i data-w="${c[k]}" style="width:0"></i></div><b>${c[k]}%</b></div>`;
 
   render(`<div class="stack">
     <div class="card stack" style="text-align:center">
-      <div style="font-size:3rem;line-height:1">${E.ic}</div>
+      <div><span class="bigicon">${E.ic}</span></div>
+      ${isNew ? `<div><span class="tag">Nový konec!</span></div>` : ""}
       <div class="big">${E.t}</div>
       <p style="margin:0" class="muted">${E.s}</p>
-      <div class="small">Konec ${ENDING_IDS.indexOf(id)+1} z ${ENDING_IDS.length} · objeveno <b>${all.length}</b></div>
     </div>
 
     <div class="card stack">
@@ -543,8 +736,12 @@ function finish(kind){
       ${epi ? `<p style="margin:0">${epi}</p>` : ""}
     </div>
 
+    <div class="q"><b>Otázka do diskuse:</b> ${E.q}</div>
+
+    ${RESULTS_URL ? `<div class="card stack"><h3>📊 Jak dopadla třída</h3><div id="stats" class="stack"><p class="muted small">Načítám…</p></div></div>` : ""}
+
     <div class="card stack">
-      <h3>Sliby z inzerátu: ${kept} z 5 dodrženo</h3>
+      <h3>Sliby ${F().name}: ${kept} z 5 dodrženo</h3>
       <ul class="plist2">${plist}</ul>
     </div>
 
@@ -554,9 +751,18 @@ function finish(kind){
       <div class="small muted">Meyer & Allen, 1991</div>
     </div>
 
-    <div class="q"><b>Do diskuse:</b> Zažil(a) jsi to někdy na brigádě? Co tě drželo?</div>
-    <button class="btn primary" onclick="intro()">Hrát znovu – najdi jiný konec</button>
-  </div>`);
+    <div class="card stack">
+      <h3>Tvoje konce: ${found().length} / ${ENDING_IDS.length}</h3>
+      ${gallery(id)}
+    </div>
+
+    <button class="btn primary" onclick="sfx('click');intro()">Hrát znovu – najdi jiný konec</button>
+  </div>`, E.mood==="bad" ? "shake" : "");
+
+  if(E.mood==="good"){ sfx("win"); confetti(); }
+  else if(E.mood==="bad"){ sfx("lose"); flash("bad"); }
+  else sfx("mid");
+  if(RESULTS_URL) setTimeout(()=>fillStats(id), 1200);
 }
 
 intro();
